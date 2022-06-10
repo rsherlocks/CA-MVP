@@ -20,7 +20,7 @@ class DeliveryOperations {
   }
   Future<List?> searchAllDeliveryById(int id) async {
     final db = await dbProvider.database;
-    List<Map<String, dynamic>>? allRows = await db?.query('delivery', where: 'deliveryId LIKE ?', whereArgs: ['%$id%']);
+    List<Map<String, dynamic>>? allRows = await db?.query('delivery', where: 'overId LIKE ?', whereArgs: ['%$id%']);
     List? deliveries =
     allRows?.map((delivery) => DeliveryBall.fromMap(delivery)).toList();
     return deliveries;
