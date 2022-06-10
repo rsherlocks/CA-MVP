@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
     //await TeamOperations().createTeam(team);
     //var x=await PlayerOperations().searchAllPlayerByName("Rakib2");
 
-    final delivery=DeliveryBall(strikerId: 101, nonStrikerId: 102, bowlerId: 141, run: 5, extraRun: 0);
+    final delivery=DeliveryBall(strikerId: 101, nonStrikerId: 102, bowlerId: 141, run: 2, overId: 1);
 
 
     //var x = await PlayerOperations().getAllPlayer();
@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
     var deliveryData=await DeliveryOperations().searchAllDeliveryById(1);
 
     deliveryData?.forEach((element) {
-      print("delivery ${element.strikerId}  & ${element.run}");
+      print("delivery ${element.strikerId}  & ${element.run}  & ${element.overId}");
     });
 
     // final match=Match( teamIdOne: 1, teamIdTwo: 2, matchName: "isct", scoreId: 1);
@@ -82,10 +82,10 @@ class MyApp extends StatelessWidget {
     // var score=Score(matchId:101, overSerial: 2, deliveriesBall:"1,2,3");
     // await ScoreOperation().createScore(score);
 
-    var scoreData= await ScoreOperation().getAllScore();
-    scoreData?.forEach((element) {
-      print("match ${element.matchId}  & ${element.deliveriesBall}");
-    });
+    // var scoreData= await ScoreOperation().getAllScore();
+    // scoreData?.forEach((element) {
+    //   print("match ${element.matchId}  & ${element.deliveriesBall}");
+    // });
 
     // x?.forEach((element) {
     //   print("1111 ${element.name}  & ${element.category}");

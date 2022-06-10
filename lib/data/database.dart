@@ -9,7 +9,7 @@ class DatabaseRepository {
   static final DatabaseRepository instance =
       DatabaseRepository.privateConstructor();
 
-  final _databaseName = 'databaseCam';
+  final _databaseName = 'databaseCmv';
   final _databaseVersion = 1;
 
   static Database? _database;
@@ -80,7 +80,7 @@ class DatabaseRepository {
             nonStrikerId INTEGER NOT NULL,
             bowlerID INTEGER NOT NULL,
             run INTEGER NOT NULL,
-            extraRun INTEGER NOT NULL 
+            overId INTEGER NOT NULL
             )
           ''');
 

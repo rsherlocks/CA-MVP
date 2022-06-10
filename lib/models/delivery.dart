@@ -4,10 +4,10 @@ class DeliveryBall{
   late int nonStrikerId;
   late int bowlerId;
   late int run;
-  late int extraRun;
+  late int overId;
 
 
-  DeliveryBall({required this.id,required this.strikerId,required this.nonStrikerId,required this.bowlerId,required this.run,required this.extraRun});
+  DeliveryBall({required this.id,required this.strikerId,required this.nonStrikerId,required this.bowlerId,required this.run,required this.overId});
 
   DeliveryBall.fromMap(dynamic obj) {
     this.id = obj['deliveryBallId'];
@@ -15,7 +15,7 @@ class DeliveryBall{
     this.nonStrikerId = obj['nonStrikerId'];
     this.bowlerId = obj['bowlerId'];
     this.run = obj['run'];
-    this.extraRun = obj['extraRun'];
+    this.overId = obj['overId'];
   }
 
   Map<String, dynamic> toMap() {
@@ -24,7 +24,7 @@ class DeliveryBall{
       'nonStrikerId': nonStrikerId,
       'bowlerId': bowlerId,
       'run': run,
-      'extraRun': extraRun,
+      'overId': overId,
     };
     return map;
   }
