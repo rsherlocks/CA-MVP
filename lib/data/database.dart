@@ -49,10 +49,13 @@ class DatabaseRepository {
             playerIdFive INTEGER NOT NULL,
             playerIdSix INTEGER NOT NULL,
             playerIdSeven INTEGER NOT NULL,
-            playerIdEight INTEGER NOT NULL
+            playerIdEight INTEGER NOT NULL,
+            FOREIGN KEY (playerIdOne) REFERENCES player (playerId),
+            FOREIGN KEY (playerIdTwo) REFERENCES player (playerId),
+            FOREIGN KEY (playerIdFour) REFERENCES player (playerId),
+            FOREIGN KEY (playerIdFive) REFERENCES player (playerId)
           )
           ''');
-
 
     await db.execute('''
           CREATE TABLE match (
@@ -69,7 +72,9 @@ class DatabaseRepository {
             scoreId INTEGER PRIMARY KEY AUTOINCREMENT,
             matchId INTEGER NOT NULL,
             overSerial INTEGER NOT NULL,
-            deliverBalls STRING NOT NULL
+            deliverBalls STRING NOT NULL,
+            FOREIGN KEY (matchId) REFERENCES score (matchId),
+
           )
           ''');
 
@@ -83,6 +88,5 @@ class DatabaseRepository {
             overId INTEGER NOT NULL
             )
           ''');
-
   }
 }

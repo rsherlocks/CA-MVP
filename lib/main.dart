@@ -43,17 +43,37 @@ class MyApp extends StatelessWidget {
 
 
   void onClick() async {
-    final player= Player(id:1, name: "Rakib2", category: "No");
-
-
-    final team=Team(playerIdOne: 101, playerIdTwo: 102, playerIdThree: 103, playerIdFour: 104, playerIdFive: 105, playerIdSix: 106, playerIdSeven: 107, playerIdEight: 108, teamName: "phonix");
-    //await TeamOperations().createTeam(team);
-    //var x=await PlayerOperations().searchAllPlayerByName("Rakib2");
-
+    final player= Player(name: "akib", category: "No");
+    final team=Team(playerIdOne: 3, playerIdTwo: 102, playerIdThree: 103, playerIdFour: 104, playerIdFive: 105, playerIdSix: 106, playerIdSeven: 107, playerIdEight: 108, teamName: "phoenix");
     final delivery=DeliveryBall(strikerId: 101, nonStrikerId: 102, bowlerId: 141, run: 2, overId: 1);
+    final match=Match( teamIdOne: 3, teamIdTwo: 4, matchName: "isct2", scoreId: 0);
 
 
-    //var x = await PlayerOperations().getAllPlayer();
+    // await PlayerOperations().createPlayer(player);
+    //
+    // var playerData=await PlayerOperations().getAllPlayer();
+    // playerData.forEach((element) {
+    //   print("Player ${element.id}  & ${element.name}");
+    //
+    // });
+
+
+    // await TeamOperations().createTeam(team);
+    //
+    //
+    // var teamData=await TeamOperations().getAllTeam();
+    //
+    // teamData.forEach((element) {
+    //     print("Team ${element.id}  & ${element.playerIdOne}  & ${element.teamName}");
+    //
+    // });
+
+    // var playerData = await TeamOperations().getAllTeamQuery();
+    // playerData?.forEach((element) {
+    //   print("player ${element.name}  & ${element.id}");
+    // });
+
+
     // var y= await TeamOperations().getAllTeam();
     // var y= await TeamOperations().searchAllTeamByName("phonix");
     // y?.forEach((element) {
@@ -64,22 +84,21 @@ class MyApp extends StatelessWidget {
     // var deliveryData=await DeliveryOperations().getAllDelivery();
 
     
-    var deliveryData=await DeliveryOperations().searchAllDeliveryByOverId(1);
+    //var deliveryData=await DeliveryOperations().searchAllDeliveryByOverId(1);
 
-    deliveryData?.forEach((element) {
-      print("delivery ${element.strikerId}  & ${element.run}  & ${element.overId}");
-    });
+    // deliveryData?.forEach((element) {
+    //   print("delivery ${element.strikerId}  & ${element.run}  & ${element.overId}");
+    // });
 
-    // final match=Match( teamIdOne: 1, teamIdTwo: 2, matchName: "isct", scoreId: 1);
     // await MatchOperation().createMatch(match);
-
+    //
     // var matchData=await MatchOperation().getAllMatch();
     //
     // matchData?.forEach((element) {
-    //   print("match ${element.teamIdOne}  & ${element.matchName}");
+    //   print("match ${element.id}  & ${element.matchName}");
     // });
 
-    // var score=Score(matchId:101, overSerial: 2, deliveriesBall:"1,2,3");
+    var score=Score(matchId:2, overSerial: 1, deliveriesBall:"1,2,3,4");
     // await ScoreOperation().createScore(score);
 
     // var scoreData= await ScoreOperation().getAllScore();
@@ -87,9 +106,12 @@ class MyApp extends StatelessWidget {
     //   print("match ${element.matchId}  & ${element.deliveriesBall}");
     // });
 
-    // x?.forEach((element) {
-    //   print("1111 ${element.name}  & ${element.category}");
-    // });
+    var matchDataQuery = await MatchOperation().getAllMatchQuery();
+    matchDataQuery?.forEach((element) {
+      print("match ${element.id}  & ${element.matchName}");
+    });
+
+
     // print(x?.length);
     // this.player=(await players)! as List<Player>;
     // print(player);
