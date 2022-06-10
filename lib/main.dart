@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget {
     // var deliveryData=await DeliveryOperations().getAllDelivery();
 
     
-    var deliveryData=await DeliveryOperations().searchAllDeliveryById(1);
+    var deliveryData=await DeliveryOperations().searchAllDeliveryByOverId(1);
 
     deliveryData?.forEach((element) {
       print("delivery ${element.strikerId}  & ${element.run}  & ${element.overId}");
