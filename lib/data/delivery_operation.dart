@@ -4,11 +4,12 @@ import 'package:ca_mvp/models/delivery.dart';
 class DeliveryOperations {
   late DeliveryOperations deliveryOperations;
   final dbProvider = DatabaseRepository.instance;
+  
 
   createDelivery(DeliveryBall deliveryBall) async {
     final db = await dbProvider.database;
-    db?.insert('delivery', deliveryBall.toMap());
-    print('delivery inserted');
+    var abc = db?.insert('delivery', deliveryBall.toMap());
+    // print(id)
   }
 
   Future<List<DeliveryBall>?> getAllDelivery() async {

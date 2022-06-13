@@ -1,4 +1,6 @@
 // @dart=2.9
+import 'dart:async';
+
 import 'package:ca_mvp/data/delivery_operation.dart';
 import 'package:ca_mvp/data/match%20operation.dart';
 import 'package:ca_mvp/data/player_operation.dart';
@@ -21,7 +23,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int _overCounter = 1;
+  int _overCounter = 20;
   int _ballCounter = 1;
   TextEditingController _overNumberController = TextEditingController();
   TextEditingController _currentBallScoreController = TextEditingController();
@@ -29,12 +31,12 @@ class _MyAppState extends State<MyApp> {
   String team1 = "Team_A";
   String team2 = "Team_B";
   String matchTime = "07 July, 2020, 03:00 PM";
-  String firstBall = "1";
-  String secondBall = "3";
-  String thirdBall = "W";
-  String fourthBall = "0";
-  String fifthBall = "2";
-  String sixthBall = "6";
+  String _firstBall = "0";
+  String _secondBall = "0";
+  String _thirdBall = "0";
+  String _fourthBall = "0";
+  String _fifthBall = "0";
+  String _sixthBall = "0";
 
 
    List<Player> player;
@@ -44,6 +46,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     //todo get match info and team info
+
   }
 
   @override
@@ -131,7 +134,18 @@ class _MyAppState extends State<MyApp> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   buildMaterialButton("Reset", Colors.black54),
-                  buildMaterialButton("Submit", Colors.green)
+                  MaterialButton(
+                    color: Colors.green,
+                    height: 45,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ), onPressed: () async {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          await insertDeliveryAndGetAllDelivery(int.parse(_currentBallScoreController.text), _overCounter);
+                          updateRunAndBallCounter("Submit");
+                        },
+                    child: const Text("Submit", style: TextStyle(color: Colors.white, fontSize: 18),),
+                  )
                 ],
               ),
             ),
@@ -147,12 +161,12 @@ class _MyAppState extends State<MyApp> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        individualScore(firstBall),
-        individualScore(secondBall),
-        individualScore(thirdBall),
-        individualScore(fourthBall),
-        individualScore(fifthBall),
-        individualScore(sixthBall),
+        individualScore(_firstBall),
+        individualScore(_secondBall),
+        individualScore(_thirdBall),
+        individualScore(_fourthBall),
+        individualScore(_fifthBall),
+        individualScore(_sixthBall),
       ],
     );
   }
@@ -187,16 +201,14 @@ class _MyAppState extends State<MyApp> {
         const SizedBox(width: 15,),
         MaterialButton(
           color: Colors.green,
-          child: const Text("Submit", style: TextStyle(color: Colors.white, fontSize: 18),),
           height: 45,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
-          ), onPressed: () {
-          setState(() {
-            //TODO get overDetails row value for _overNumberController.text
-
-          });
-        },
+          ), onPressed: () async {
+                FocusManager.instance.primaryFocus?.unfocus();
+                await getOverDetailsByOverNumber(int.parse(_overNumberController.text));
+            },
+          child: const Text("Submit", style: TextStyle(color: Colors.white, fontSize: 18),),
         )
       ],
     );
@@ -220,13 +232,13 @@ class _MyAppState extends State<MyApp> {
   MaterialButton buildMaterialButton(String buttonText, Color color) {
     return MaterialButton(
       color: color,
-      child: Text(buttonText, style: const TextStyle(color: Colors.white, fontSize: 18),),
       height: 45,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ), onPressed: () {
       updateRunAndBallCounter(buttonText);
     },
+      child: Text(buttonText, style: const TextStyle(color: Colors.white, fontSize: 18),),
     );
   }
 
@@ -247,15 +259,9 @@ class _MyAppState extends State<MyApp> {
       } else if(buttonText == "Reset"){
         _currentBallScoreController.clear();
       } else if(buttonText == "Submit"){
-        if(_currentBallScoreController.text == ""){
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Sending Message"),
-          ));
-        } else{
           print("Current ball: $_ballCounter  || score: ${_currentBallScoreController.text}");
           _ballCounter++;
           _currentBallScoreController.clear();
-        }
       }
 
 
@@ -268,14 +274,14 @@ class _MyAppState extends State<MyApp> {
 
 
   void onClick() async {
-    final player= Player(id:1, name: "Rakib2", category: "No");
-
-
-    final team=Team(playerIdOne: 101, playerIdTwo: 102, playerIdThree: 103, playerIdFour: 104, playerIdFive: 105, playerIdSix: 106, playerIdSeven: 107, playerIdEight: 108, teamName: "phonix");
+    // final player= Player(id:1, name: "Rakib2", category: "No");
+    //
+    //
+    // final team=Team(playerIdOne: 101, playerIdTwo: 102, playerIdThree: 103, playerIdFour: 104, playerIdFive: 105, playerIdSix: 106, playerIdSeven: 107, playerIdEight: 108, teamName: "phonix");
     //await TeamOperations().createTeam(team);
     //var x=await PlayerOperations().searchAllPlayerByName("Rakib2");
 
-    final delivery=DeliveryBall(strikerId: 101, nonStrikerId: 102, bowlerId: 141, run: 2, overId: 1);
+    // final delivery = DeliveryBall(strikerId: 101, nonStrikerId: 102, bowlerId: 141, run: 2, overId: 1);
 
 
     //var x = await PlayerOperations().getAllPlayer();
@@ -285,15 +291,10 @@ class _MyAppState extends State<MyApp> {
     //   print("1111 ${element.teamName}  & ${element.playerIdOne}");
     // });
 
-    await DeliveryOperations().createDelivery(delivery);
-    // var deliveryData=await DeliveryOperations().getAllDelivery();
+    // await insertDeliveryAndGetAllDelivery(3, 1);
 
 
-    var deliveryData=await DeliveryOperations().searchAllDeliveryById(5);
-
-    deliveryData?.forEach((element) {
-      print("delivery ${element.strikerId}  & ${element.run}  & ${element.overId}");
-    });
+    await getAllDeliveryData();
 
     // final match=Match( teamIdOne: 1, teamIdTwo: 2, matchName: "isct", scoreId: 1);
     // await MatchOperation().createMatch(match);
@@ -318,6 +319,65 @@ class _MyAppState extends State<MyApp> {
     // print(x?.length);
     // this.player=(await players)! as List<Player>;
     // print(player);
+
+  }
+
+  Future<void> insertDeliveryAndGetAllDelivery(int run, int overNumber) async {
+    final delivery = DeliveryBall(strikerId: 102, nonStrikerId: 101, bowlerId: 141, run: run, overId: overNumber);
+    await DeliveryOperations().createDelivery(delivery);
+
+    // deliveryData?.forEach((element) {
+    //   print("delivery ${element.strikerId}  & ${element.run}  & ${element.overId}");
+    // });
+    // return delivery;
+  }
+
+
+
+  Future<void> getOverDetailsByOverNumber(int id) async {
+    var deliveryData = await DeliveryOperations().searchAllDeliveryById(id).then((value) =>
+        value == null ? print("value nulllll") :  insertValue(value)
+    );
+
+
+    // print("abc: ${deliveryData[0]}");
+    // print("avbc: ${deliveryData[1]}");
+
+
+    // for (var element in deliveryData) {
+    //   print("delivery ${element.strikerId}  & ${element.run}  & ${element.overId}");
+    // }
+    // return deliveryData;
+
+
+
+  }
+  Future<void> getAllDeliveryData() async {
+    await DeliveryOperations().getAllDelivery().then((value) => value.forEach((element) {
+      // Timer(Duration(milliseconds: 300), () {
+      print("delivery ${element.strikerId}  & ${element.run}  & ${element.overId}");
+      // });
+
+
+    }));
+
+
+  }
+
+  insertValue(List value) {
+    setState((){
+      print("total value length ${value.length}");
+
+      _firstBall = value[0].run.toString();
+      _secondBall = value[1].run.toString();
+      _thirdBall = value[2].run.toString();
+      _fourthBall = value[3].run.toString();
+      _fifthBall = value[4].run.toString();
+      // _sixthBall = value[5].run.toString();
+
+      print("updated value");
+    });
+
 
   }
 }
