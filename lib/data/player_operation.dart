@@ -12,6 +12,13 @@ class PlayerOperations {
     print('player inserted');
   }
 
+  deletePlayerById(int id) async{
+    final db = await dbProvider.database;
+    db?.delete('player', where: 'playerId LIKE ?', whereArgs: ['%$id%']);
+    print("player deleted");
+  }
+
+
   Future<List<Player>?> getAllPlayer() async {
     final db = await dbProvider.database;
     List<Map<String, dynamic>>? allRows = await db?.query('player');

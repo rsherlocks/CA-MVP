@@ -23,7 +23,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int _overCounter = 20;
+  int _overCounter = 22;
   int _ballCounter = 1;
   TextEditingController _overNumberController = TextEditingController();
   TextEditingController _currentBallScoreController = TextEditingController();
@@ -274,25 +274,34 @@ class _MyAppState extends State<MyApp> {
 
 
   void onClick() async {
-    final player= Player(name: "akib", category: "No");
+    final player= Player(name: "Laden", category: "Batsman");
     final team=Team(playerIdOne: 3, playerIdTwo: 102, playerIdThree: 103, playerIdFour: 104, playerIdFive: 105, playerIdSix: 106, playerIdSeven: 107, playerIdEight: 108, teamName: "phoenix");
     final delivery=DeliveryBall(strikerId: 101, nonStrikerId: 102, bowlerId: 141, run: 2, overId: 1);
     final match=Match( teamIdOne: 3, teamIdTwo: 4, matchName: "isct2", scoreId: 0);
 
 
-    // await PlayerOperations().createPlayer(player);
+    await PlayerOperations().createPlayer(player);
     //
-    // var playerData=await PlayerOperations().getAllPlayer();
-    // playerData.forEach((element) {
-    //   print("Player ${element.id}  & ${element.name}");
-    //
-    // });
+
+    // await PlayerOperations().deletePlayerById(3);
+
+    var playerData = await PlayerOperations().getAllPlayer();
+    print("playerData size: ${playerData.length}");
+
+    playerData.forEach((element) {
+      print("Player ${element.id} || ${element.name} || ${element.category}");
+    });
 
 
     // await TeamOperations().createTeam(team);
     //
     //
-    // var teamData=await TeamOperations().getAllTeam();
+    var teamData = await TeamOperations().getAllTeam();
+    print("team size: ${teamData.length}");
+
+    teamData?.forEach((element) {
+      print("team team ${element.id}  & ${element.playerIdOne}   ${element.playerIdOne}");
+    });
     //
     // teamData.forEach((element) {
     //     print("Team ${element.id}  & ${element.playerIdOne}  & ${element.teamName}");
@@ -323,7 +332,7 @@ class _MyAppState extends State<MyApp> {
 
     //var deliveryData=await DeliveryOperations().searchAllDeliveryByOverId(1);
 
-    await getAllDeliveryData();
+    // await getAllDeliveryData();
     // deliveryData?.forEach((element) {
     //   print("delivery ${element.strikerId}  & ${element.run}  & ${element.overId}");
     // });
@@ -336,7 +345,7 @@ class _MyAppState extends State<MyApp> {
     //   print("match ${element.id}  & ${element.matchName}");
     // });
 
-    var score=Score(matchId:2, overSerial: 1, deliveriesBall:"1,2,3,4");
+    // var score = Score(matchId:2, overSerial: 1, deliveriesBall:"1,2,3,4");
     // await ScoreOperation().createScore(score);
 
     // var scoreData= await ScoreOperation().getAllScore();
@@ -344,9 +353,11 @@ class _MyAppState extends State<MyApp> {
     //   print("match ${element.matchId}  & ${element.deliveriesBall}");
     // });
 
-    var matchDataQuery = await MatchOperation().getAllMatchQuery();
+    var matchDataQuery = await MatchOperation().getTwoTeamsQuery();
+    print("matchDataQuery size: ${matchDataQuery.length}");
+
     matchDataQuery?.forEach((element) {
-      print("match ${element.id}  & ${element.matchName}   ${element.teamIdOne}");
+      print("match team ${element.id}  & ${element.playerIdOne}   ${element.playerIdOne}");
     });
 
 
@@ -369,7 +380,7 @@ class _MyAppState extends State<MyApp> {
 
 
   Future<void> getOverDetailsByOverNumber(int id) async {
-    var deliveryData = await DeliveryOperations().searchAllDeliveryById(id).then((value) =>
+    var deliveryData = await DeliveryOperations().searchAllDeliveryByOverId(id).then((value) =>
         value == null ? print("value nulllll") :  insertValue(value)
     );
 
@@ -407,7 +418,7 @@ class _MyAppState extends State<MyApp> {
       _thirdBall = value[2].run.toString();
       _fourthBall = value[3].run.toString();
       _fifthBall = value[4].run.toString();
-      // _sixthBall = value[5].run.toString();
+      _sixthBall = value[5].run.toString();
 
       print("updated value");
     });

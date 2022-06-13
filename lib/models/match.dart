@@ -9,11 +9,11 @@ class Match{
   Match({required this.id,required this.teamIdOne,required this.teamIdTwo,required this.matchName,required this.scoreId});
 
   Match.fromMap(dynamic obj) {
-    this.id = obj['matchId'];
-    this.matchName = obj['matchName'];
-    this.teamIdOne = obj['teamIdOne'];
-    this.teamIdTwo = obj['teamIdTwo'];
-    this.scoreId = obj['scoreId'];
+    id = obj['matchId'];
+    matchName = obj['matchName'];
+    teamIdOne = obj['teamIdOne'];
+    teamIdTwo = obj['teamIdTwo'];
+    scoreId = obj['scoreId'];
   }
 
   Map<String, dynamic> toMap() {

@@ -8,10 +8,10 @@ class Score{
   Score({required this.id,required this.matchId,required this.overSerial,required this.deliveriesBall});
 
   Score.fromMap(dynamic obj) {
-    this.id = obj['scoreId'];
-    this.matchId = obj['matchId'];
-    this.overSerial = obj['overSerial'];
-    this.deliveriesBall = obj['deliverBalls'];
+    id = obj['scoreId'];
+    matchId = obj['matchId'];
+    overSerial = obj['overSerial'];
+    deliveriesBall = obj['deliverBalls'];
   }
 
   Map<String, dynamic> toMap() {

@@ -9,9 +9,9 @@ class Player{
     required this.category});
 
   Player.fromMap(dynamic obj) {
-    this.id = obj['playerId'];
-    this.name = obj['playerName'];
-    this.category = obj['FK_player_category'];
+    id = obj['playerId'];
+    name = obj['playerName'];
+    category = obj['FK_player_category'];
   }
 
   Map<String, dynamic> toMap() {

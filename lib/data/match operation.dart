@@ -1,6 +1,8 @@
 import 'package:ca_mvp/data/database.dart';
 import 'package:ca_mvp/models/match.dart';
 
+import '../models/team.dart';
+
 class MatchOperation {
   late MatchOperation matchOperations;
   final dbProvider = DatabaseRepository.instance;
@@ -26,6 +28,15 @@ class MatchOperation {
     List<Match>? matches =
         allRows?.map((matches) => Match.fromMap(matches)).toList();
     return matches;
+  }
+
+  Future<List<Team>?> getTwoTeamsQuery() async {
+    final db = await dbProvider.database;
+    List<Map<String, dynamic>>? allRows = await db?.rawQuery('''
+    SELECT * FROM match  INNER JOIN team ON match.teamIdOne = team.teamId OR match.teamIdTwo = team.teamId ''');
+    List<Team>? teams =
+    allRows?.map((teams) => Team.fromMap(teams)).toList();
+    return teams;
   }
 
   Future<List?> searchAllMatchById(int id) async {
