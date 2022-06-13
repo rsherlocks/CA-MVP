@@ -117,17 +117,17 @@ class _MyAppState extends State<MyApp> {
             const SizedBox(height: 20,),
             buildRow("0", Colors.blueGrey, "1", Colors.blueGrey, "2", Colors.blueGrey, "3", Colors.blueGrey),
             buildRow("4", Colors.blueGrey, "6", Colors.blueGrey, "Wide", Colors.orangeAccent, "No ball", Colors.orangeAccent),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10,3,10,3),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  buildMaterialButton("Out", Colors.red),
-                  buildMaterialButton("Bye", Colors.orangeAccent),
-                  buildMaterialButton("Leg-bye", Colors.orangeAccent)
-                ],
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.fromLTRB(10,3,10,3),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       buildMaterialButton("Out", Colors.red),
+            //       buildMaterialButton("Bye", Colors.orangeAccent),
+            //       buildMaterialButton("Leg-bye", Colors.orangeAccent)
+            //     ],
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.fromLTRB(10,3,10,3),
               child: Row(
