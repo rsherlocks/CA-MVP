@@ -19,6 +19,7 @@ class DatabaseRepository {
       return _database;
     } else {
       _database = await _initDatabase();
+      return _database;
     }
   }
 

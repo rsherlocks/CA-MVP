@@ -108,7 +108,7 @@ class MyApp extends StatelessWidget {
 
     var matchDataQuery = await MatchOperation().getAllMatchQuery();
     matchDataQuery?.forEach((element) {
-      print("match ${element.id}  & ${element.matchName}");
+      print("match ${element.id}  & ${element.matchName}   ${element.teamIdOne}");
     });
 
 
