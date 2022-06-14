@@ -9,7 +9,13 @@ class DeliveryOperations {
   createDelivery(DeliveryBall deliveryBall) async {
     final db = await dbProvider.database;
     var abc = db?.insert('delivery', deliveryBall.toMap());
-    // print(id)
+    return abc;
+  }
+
+  deleteDeliveryById(int id) async{
+    final db = await dbProvider.database;
+    db?.delete('delivery');
+    print("delivery deleted");
   }
 
   Future<List<DeliveryBall>?> getAllDelivery() async {
@@ -26,4 +32,13 @@ class DeliveryOperations {
     allRows?.map((delivery) => DeliveryBall.fromMap(delivery)).toList();
     return deliveries;
   }
+
+  searchDeliveryById(int id) async {
+    final db = await dbProvider.database;
+    List<Map<String, dynamic>>? allRows = await db?.query('delivery', where: 'deliveryId LIKE ?', whereArgs: ['%$id%']);
+    List? deliveries =
+    allRows?.map((delivery) => DeliveryBall.fromMap(delivery)).toList();
+    return deliveries;
+  }
+
 }

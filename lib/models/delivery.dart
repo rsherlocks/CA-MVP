@@ -10,7 +10,7 @@ class DeliveryBall{
   DeliveryBall({required this.id,required this.strikerId,required this.nonStrikerId,required this.bowlerId,required this.run,required this.overId});
 
   DeliveryBall.fromMap(dynamic obj) {
-    id = obj['deliveryBallId'];
+    id = obj['deliveryId'];
     strikerId = obj['strikerId'];
     nonStrikerId = obj['nonStrikerId'];
     bowlerId = obj['bowlerId'];

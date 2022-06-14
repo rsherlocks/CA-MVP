@@ -13,6 +13,13 @@ class MatchOperation {
     print('match inserted');
   }
 
+  deleteAllMatch() async{
+    final db = await dbProvider.database;
+    db?.delete('match');
+    print("match deleted");
+  }
+
+
   Future<List<Match>?> getAllMatch() async {
     final db = await dbProvider.database;
     List<Map<String, dynamic>>? allRows = await db?.query('match');

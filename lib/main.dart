@@ -23,14 +23,15 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int _overCounter = 22;
+  int _overCounter = 1;
   int _ballCounter = 1;
   TextEditingController _overNumberController = TextEditingController();
   TextEditingController _currentBallScoreController = TextEditingController();
-  String matchName = "XYZ Tournament - 2022";
-  String team1 = "Team_A";
-  String team2 = "Team_B";
-  String matchTime = "07 July, 2020, 03:00 PM";
+  String matchName = "KPL - 2022";
+  String team1 = "";
+  String team2 = "";
+  String matchTime = "07 July, 2022, 4:00 pm";
+  String allDeliveries = "";
   String _firstBall = "0";
   String _secondBall = "0";
   String _thirdBall = "0";
@@ -141,7 +142,12 @@ class _MyAppState extends State<MyApp> {
                       borderRadius: BorderRadius.circular(10.0),
                     ), onPressed: () async {
                           FocusManager.instance.primaryFocus?.unfocus();
-                          await insertDeliveryAndGetAllDelivery(int.parse(_currentBallScoreController.text), _overCounter);
+                          var idOfDelivery = await insertDeliveryAndGetAllDelivery(int.parse(_currentBallScoreController.text), _overCounter);
+                          allDeliveries += "${idOfDelivery.toString()},";
+                          print("ALL DELIVERIES: $allDeliveries");
+                          // if(_ballCounter == 6){
+                          //   final score = Score(matchId: , deliveriesBall: allDeliveries, overSerial: _overCounter);
+                          // }
                           updateRunAndBallCounter("Submit");
                         },
                     child: const Text("Submit", style: TextStyle(color: Colors.white, fontSize: 18),),
@@ -274,34 +280,35 @@ class _MyAppState extends State<MyApp> {
 
 
   void onClick() async {
-    final player= Player(name: "Laden", category: "Batsman");
-    final team=Team(playerIdOne: 3, playerIdTwo: 102, playerIdThree: 103, playerIdFour: 104, playerIdFive: 105, playerIdSix: 106, playerIdSeven: 107, playerIdEight: 108, teamName: "phoenix");
-    final delivery=DeliveryBall(strikerId: 101, nonStrikerId: 102, bowlerId: 141, run: 2, overId: 1);
-    final match=Match( teamIdOne: 3, teamIdTwo: 4, matchName: "isct2", scoreId: 0);
+    final player = Player(name: "wahab", category: "Batsman");
+    final team = Team(playerIdOne: 11, playerIdTwo: 12, playerIdThree: 13, playerIdFour: 14, playerIdFive: 15, playerIdSix: 16,
+                        playerIdSeven: 17, playerIdEight: 18, teamName: "team ade");
+    final delivery = DeliveryBall(strikerId: 101, nonStrikerId: 102, bowlerId: 141, run: 2, overId: 1);
+    final match = Match( teamIdOne: 3, teamIdTwo: 4, matchName: "isct2", scoreId: 0);
 
 
-    await PlayerOperations().createPlayer(player);
-    //
+    // await PlayerOperations().createPlayer(player);
+
+    // await createNewMatch();
 
     // await PlayerOperations().deletePlayerById(3);
 
-    var playerData = await PlayerOperations().getAllPlayer();
-    print("playerData size: ${playerData.length}");
+    // await DeliveryOperations().deleteDeliveryById(2);
 
-    playerData.forEach((element) {
-      print("Player ${element.id} || ${element.name} || ${element.category}");
-    });
+    // await MatchOperation().deleteAllMatch();
+
+    // var playerData = await PlayerOperations().getAllPlayer();
+    // print("playerData size: ${playerData.length}");
+    //
+    // playerData.forEach((element) {
+    //   print("Player ${element.id} || ${element.name} || ${element.category}");
+    // });
 
 
     // await TeamOperations().createTeam(team);
     //
     //
-    var teamData = await TeamOperations().getAllTeam();
-    print("team size: ${teamData.length}");
-
-    teamData?.forEach((element) {
-      print("team team ${element.id}  & ${element.playerIdOne}   ${element.playerIdOne}");
-    });
+    await getAllTeamData();
     //
     // teamData.forEach((element) {
     //     print("Team ${element.id}  & ${element.playerIdOne}  & ${element.teamName}");
@@ -332,33 +339,27 @@ class _MyAppState extends State<MyApp> {
 
     //var deliveryData=await DeliveryOperations().searchAllDeliveryByOverId(1);
 
-    // await getAllDeliveryData();
+    await getAllDeliveryData();
     // deliveryData?.forEach((element) {
     //   print("delivery ${element.strikerId}  & ${element.run}  & ${element.overId}");
     // });
 
     // await MatchOperation().createMatch(match);
     //
-    // var matchData=await MatchOperation().getAllMatch();
-    //
-    // matchData?.forEach((element) {
-    //   print("match ${element.id}  & ${element.matchName}");
-    // });
+    await getAllMatchData();
 
     // var score = Score(matchId:2, overSerial: 1, deliveriesBall:"1,2,3,4");
     // await ScoreOperation().createScore(score);
 
-    // var scoreData= await ScoreOperation().getAllScore();
-    // scoreData?.forEach((element) {
-    //   print("match ${element.matchId}  & ${element.deliveriesBall}");
+    await getAllScoreData();
+
+
+    // var matchDataQuery = await MatchOperation().getTwoTeamsQuery();
+    // print("matchDataQuery size: ${matchDataQuery.length}");
+    //
+    // matchDataQuery?.forEach((element) {
+    //   print("match team ${element.id}  & ${element.playerIdOne}   ${element.playerIdOne}");
     // });
-
-    var matchDataQuery = await MatchOperation().getTwoTeamsQuery();
-    print("matchDataQuery size: ${matchDataQuery.length}");
-
-    matchDataQuery?.forEach((element) {
-      print("match team ${element.id}  & ${element.playerIdOne}   ${element.playerIdOne}");
-    });
 
 
     // print(x?.length);
@@ -367,49 +368,88 @@ class _MyAppState extends State<MyApp> {
 
   }
 
-  Future<void> insertDeliveryAndGetAllDelivery(int run, int overNumber) async {
-    final delivery = DeliveryBall(strikerId: 102, nonStrikerId: 101, bowlerId: 141, run: run, overId: overNumber);
-    await DeliveryOperations().createDelivery(delivery);
 
-    // deliveryData?.forEach((element) {
-    //   print("delivery ${element.strikerId}  & ${element.run}  & ${element.overId}");
-    // });
-    // return delivery;
+  Future<void> getAllTeamData() async {
+    var teamData = await TeamOperations().getAllTeam();
+    print("teamData size: ${teamData.length}");
+
+    teamData?.forEach((element) {
+      print("teamData id: ${element.id}  & playerIdOne: ${element.playerIdOne}  ||  teamName ${element.teamName}");
+    });
   }
 
+
+  Future<void> getAllScoreData() async {
+    var scoreData= await ScoreOperation().getAllScore();
+    print("scoreData size: ${scoreData.length}");
+
+    scoreData?.forEach((element) {
+      print("scoreData matchId: ${element.matchId}  & overSerial: ${element.overSerial}  deliveries: ${element.deliveriesBall}");
+    });
+  }
+
+
+  Future<void> getAllMatchData() async {
+    var matchData = await MatchOperation().getAllMatch();
+    print("matchData size: ${matchData.length}");
+
+    matchData?.forEach((element) {
+      print("match matchid: ${element.id}  & matchName: ${element.matchName}");
+    });
+  }
+
+  Future<void> createNewMatch() async{
+    final match = Match(teamIdOne: 1, teamIdTwo: 2, matchName: matchName, scoreId: 0);
+
+    var idOfMatch = await MatchOperation().createMatch(match);
+    print("IdOfMatch: $idOfMatch");
+  }
+
+
+  Future<int> insertDeliveryAndGetAllDelivery(int run, int overNumber) async {
+    final delivery = DeliveryBall(strikerId: 102, nonStrikerId: 101, bowlerId: 141, run: run, overId: overNumber);
+    var idOfDelivery = await DeliveryOperations().createDelivery(delivery);
+    print("ins: $idOfDelivery");
+
+    return idOfDelivery;
+  }
 
 
   Future<void> getOverDetailsByOverNumber(int id) async {
     var deliveryData = await DeliveryOperations().searchAllDeliveryByOverId(id).then((value) =>
-        value == null ? print("value nulllll") :  insertValue(value)
+        value == null ? print("value nulllll") :  assignValue(value)
     );
-
-
-    // print("abc: ${deliveryData[0]}");
-    // print("avbc: ${deliveryData[1]}");
-
-
-    // for (var element in deliveryData) {
-    //   print("delivery ${element.strikerId}  & ${element.run}  & ${element.overId}");
-    // }
-    // return deliveryData;
-
-
-
   }
+
+
   Future<void> getAllDeliveryData() async {
-    await DeliveryOperations().getAllDelivery().then((value) => value.forEach((element) {
-      // Timer(Duration(milliseconds: 300), () {
-      print("delivery ${element.strikerId}  & ${element.run}  & ${element.overId}");
-      // });
+    var deliveryData = await DeliveryOperations().getAllDelivery();
 
+    print("deliveryData size: ${deliveryData.length}");
 
-    }));
-
+    deliveryData?.forEach((element) {
+      print("delivery id: ${element.id}  & ${element.run}  & ${element.overId}");
+    });
 
   }
 
-  insertValue(List value) {
+  getIdsFromDeliveries(String deliveries){
+    final splittedString = deliveries.split(',');
+    final Map<int, int> ids = {
+      for (int i = 0; i < splittedString.length; i++)
+        if(splittedString[i].isNotEmpty)
+          i: int.parse(splittedString[i])
+    };
+    print(ids);
+
+    ids.forEach((key, value) {
+      print("$key :: $value");
+    });
+    return ids;
+  }
+
+
+  assignValue(List value) {
     setState((){
       print("total value length ${value.length}");
 
@@ -422,7 +462,5 @@ class _MyAppState extends State<MyApp> {
 
       print("updated value");
     });
-
-
   }
 }

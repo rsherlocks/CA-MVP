@@ -75,7 +75,6 @@ class DatabaseRepository {
             overSerial INTEGER NOT NULL,
             deliverBalls STRING NOT NULL,
             FOREIGN KEY (matchId) REFERENCES score (matchId),
-
           )
           ''');
 
