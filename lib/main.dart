@@ -1,5 +1,6 @@
 // @dart=2.9
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:ca_mvp/data/delivery_operation.dart';
 import 'package:ca_mvp/data/match%20operation.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int _overCounter = 1;
+  int _overCounter = 4;
   int _ballCounter = 1;
   TextEditingController _overNumberController = TextEditingController();
   TextEditingController _currentBallScoreController = TextEditingController();
@@ -32,22 +33,23 @@ class _MyAppState extends State<MyApp> {
   String team2 = "";
   String matchTime = "07 July, 2022, 4:00 pm";
   String allDeliveries = "";
-  String _firstBall = "0";
-  String _secondBall = "0";
-  String _thirdBall = "0";
-  String _fourthBall = "0";
-  String _fifthBall = "0";
-  String _sixthBall = "0";
+  List<String> scorePerBall = ["0", "0","0","0","0","0"];
+  // String _firstBall = "0";
+  // String _secondBall = "0";
+  // String _thirdBall = "0";
+  // String _fourthBall = "0";
+  // String _fifthBall = "0";
+  // String _sixthBall = "0";
 
 
    List<Player> player;
    Future future;
 
   @override
-  void initState() {
+  initState() {
     super.initState();
     //todo get match info and team info
-
+    setMatchInfo();
   }
 
   @override
@@ -65,7 +67,7 @@ class _MyAppState extends State<MyApp> {
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.green)
             ), child: const Text("Perform Operations"),),
 
-            const SizedBox(height: 15,),
+            const SizedBox(height: 5,),
             Text(matchName, style: const TextStyle(fontSize: 20),),
             const SizedBox(height: 5,),
             Row(
@@ -77,7 +79,7 @@ class _MyAppState extends State<MyApp> {
               ],
             ),
             const SizedBox(height: 5,),
-            Text("Match Time: $matchTime"),
+            Text("Match Time: $matchTime", style: const TextStyle(fontSize: 17),),
             const Text("---------------------------------------------------------------------------------------------"),
             const SizedBox(height: 10,),
             const Text("Enter over number to find detailed score", style: TextStyle(fontSize: 18),),
@@ -145,9 +147,11 @@ class _MyAppState extends State<MyApp> {
                           var idOfDelivery = await insertDeliveryAndGetAllDelivery(int.parse(_currentBallScoreController.text), _overCounter);
                           allDeliveries += "${idOfDelivery.toString()},";
                           print("ALL DELIVERIES: $allDeliveries");
-                          // if(_ballCounter == 6){
-                          //   final score = Score(matchId: , deliveriesBall: allDeliveries, overSerial: _overCounter);
-                          // }
+                          if(_ballCounter == 6){
+                            final score = Score(matchId: 2, deliveriesBall: allDeliveries, overSerial: _overCounter);
+                            await ScoreOperation().createScore(score);
+                            allDeliveries = "";
+                          }
                           updateRunAndBallCounter("Submit");
                         },
                     child: const Text("Submit", style: TextStyle(color: Colors.white, fontSize: 18),),
@@ -167,12 +171,12 @@ class _MyAppState extends State<MyApp> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        individualScore(_firstBall),
-        individualScore(_secondBall),
-        individualScore(_thirdBall),
-        individualScore(_fourthBall),
-        individualScore(_fifthBall),
-        individualScore(_sixthBall),
+        individualScore(scorePerBall[0]),
+        individualScore(scorePerBall[1]),
+        individualScore(scorePerBall[2]),
+        individualScore(scorePerBall[3]),
+        individualScore(scorePerBall[4]),
+        individualScore(scorePerBall[5]),
       ],
     );
   }
@@ -212,7 +216,11 @@ class _MyAppState extends State<MyApp> {
             borderRadius: BorderRadius.circular(10.0),
           ), onPressed: () async {
                 FocusManager.instance.primaryFocus?.unfocus();
-                await getOverDetailsByOverNumber(int.parse(_overNumberController.text));
+                // await getOverDetailsByOverNumber(int.parse(_overNumberController.text));
+                setState((){
+                  getOverDetails(int.parse(_overNumberController.text));
+                });
+
             },
           child: const Text("Submit", style: TextStyle(color: Colors.white, fontSize: 18),),
         )
@@ -269,7 +277,6 @@ class _MyAppState extends State<MyApp> {
           _ballCounter++;
           _currentBallScoreController.clear();
       }
-
 
       if(_ballCounter == 7){
         _ballCounter = 1;
@@ -433,7 +440,7 @@ class _MyAppState extends State<MyApp> {
 
   }
 
-  getIdsFromDeliveries(String deliveries){
+  Map<int, int> getIdsFromDeliveries(String deliveries){
     final splittedString = deliveries.split(',');
     final Map<int, int> ids = {
       for (int i = 0; i < splittedString.length; i++)
@@ -453,14 +460,35 @@ class _MyAppState extends State<MyApp> {
     setState((){
       print("total value length ${value.length}");
 
-      _firstBall = value[0].run.toString();
-      _secondBall = value[1].run.toString();
-      _thirdBall = value[2].run.toString();
-      _fourthBall = value[3].run.toString();
-      _fifthBall = value[4].run.toString();
-      _sixthBall = value[5].run.toString();
+      for(int i = 0; i<value.length; i++){
+        scorePerBall[i] = value[i].run.toString();
+      }
 
       print("updated value");
     });
+  }
+
+  void setMatchInfo() async{
+    var match  = await MatchOperation().getMatchById(2);
+    print(match.matchName);
+
+    matchName = match.matchName;
+    team1 = await TeamOperations().getTeamById(match.teamIdOne);
+    team2 = await TeamOperations().getTeamById(match.teamIdTwo);
+  }
+
+  Future<void> getOverDetails(int overNumber) async {
+    var score = await ScoreOperation().searchScoreByMatchIdAndOverNumber(2, overNumber);
+    var deliveryIds = score.deliveriesBall;
+    print(deliveryIds);
+
+    var idsMap = getIdsFromDeliveries(deliveryIds);
+
+    idsMap.forEach((key, value) async {
+      var del = await DeliveryOperations().searchDeliveryById(value);
+      scorePerBall[key] = del.run.toString();
+      print("scoree-  key: $key || value: ${scorePerBall[key]} ");
+    });
+
   }
 }

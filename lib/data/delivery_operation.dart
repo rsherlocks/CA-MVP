@@ -38,7 +38,7 @@ class DeliveryOperations {
     List<Map<String, dynamic>>? allRows = await db?.query('delivery', where: 'deliveryId LIKE ?', whereArgs: ['%$id%']);
     List? deliveries =
     allRows?.map((delivery) => DeliveryBall.fromMap(delivery)).toList();
-    return deliveries;
+    return deliveries![0];
   }
 
 }

@@ -28,6 +28,13 @@ class TeamOperations {
     return teams;
   }
 
+  getTeamById(int id) async{
+    final db = await dbProvider.database;
+    List<Map<String, dynamic>>? obj = await db?.query('team', where: 'teamId LIKE ?', whereArgs: ['%$id%']);
+    List? teams = obj?.map((team) => Team.fromMap(team)).toList();
+    return teams![0].teamName;
+  }
+
   Future<List?> searchAllTeamByName(String team) async {
     final db = await dbProvider.database;
     List<Map<String, dynamic>>? allRows = await db?.query('team', where: 'teamName LIKE ?', whereArgs: ['%$team%']);

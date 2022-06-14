@@ -19,6 +19,13 @@ class ScoreOperation{
     return scores;
   }
 
+  searchScoreByMatchIdAndOverNumber(int matchId, int overNumber) async {
+    final db = await dbProvider.database;
+    List<Map<String, dynamic>>? allRows = await db?.query('score', where: 'matchId LIKE ? and overSerial = ?', whereArgs: ['%$matchId%', overNumber]);
+    List? scores = allRows?.map((score) => Score.fromMap(score)).toList();
+    return scores![0];
+  }
+
   Future<List?> searchAllScoreById(int id) async {
     final db = await dbProvider.database;
     List<Map<String, dynamic>>? allRows = await db?.query('score', where: 'scoreId LIKE ?', whereArgs: ['%$id%']);

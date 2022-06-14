@@ -28,6 +28,15 @@ class MatchOperation {
     return matches;
   }
 
+
+  getMatchById(int id) async {
+    final db = await dbProvider.database;
+    List<Map<String, dynamic>>? obj  = await db?.query('match', where: 'matchId LIKE ?', whereArgs: ['%$id%']);
+    List? matches = obj?.map((match) => Match.fromMap(match)).toList();
+    return matches![0];
+  }
+
+
   Future<List<Match>?> getAllMatchQuery() async {
     final db = await dbProvider.database;
     List<Map<String, dynamic>>? allRows = await db?.rawQuery('''
